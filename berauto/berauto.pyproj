@@ -61,6 +61,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="berautoApp\app\models\user.py" />
+    <Compile Include="berautoApp\app\models\rental.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="berautoApp\app\models\__init__.py">
       <SubType>Code</SubType>
     </Compile>
