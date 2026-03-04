@@ -74,6 +74,7 @@
     <Compile Include="berautoApp\config.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="berautoApp\init_db.py" />
     <Compile Include="berautoApp\run.py">
       <SubType>Code</SubType>
     </Compile>
