@@ -32,3 +32,24 @@ for u in User.query.all():
 print("\nCar lista:")
 for c in Car.query.all():
     print(c.id, c.brand, c.model, c.license_plate)
+
+#Rental
+from app.models.rental import Rental, RentalStatus
+rental1 = Rental(user=db.session.get(User, 2), car=db.session.get(Car, 1), start_date=date(2026, 3, 10), end_date=date(2026, 3, 15), status=RentalStatus.APPROVED)
+db.session.add(rental1)
+db.session.commit()
+
+#Invoice
+from app.models.invoice import Invoice
+invoice1 = Invoice(rental=db.session.get(Rental, 1), amount=100000)
+db.session.add(invoice1)
+db.session.commit()
+
+#Test Rental+Invoice
+print("\nRental lista:")
+for r in Rental.query.all():
+    print(r.id, r.user.full_name, r.car.model, r.status.name)
+
+print("\nInvoice lista:")
+for i in Invoice.query.all():
+    print(i.id, i.amount, i.rental.car.model)
