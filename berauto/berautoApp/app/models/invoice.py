@@ -2,7 +2,7 @@ from datetime import datetime
 from app import db
 
 class Invoice(db.Model):
-    tablename = "invoices"
+    __tablename__ = "invoices"
 
     id = db.Column(db.Integer, primary_key=True)
 
@@ -32,5 +32,5 @@ class Invoice(db.Model):
         back_populates="invoice"
     )
 
-    def repr(self):
+    def __repr__(self):
         return f"<Invoice {self.id} rental={self.rental_id}>"
