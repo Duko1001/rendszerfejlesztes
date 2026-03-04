@@ -57,6 +57,7 @@
     <Compile Include="berautoApp\app\models\car.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="berautoApp\app\models\invoice.py" />
     <Compile Include="berautoApp\app\models\test.py">
       <SubType>Code</SubType>
     </Compile>
