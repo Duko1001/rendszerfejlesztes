@@ -29,8 +29,10 @@
   <ItemGroup>
     <Folder Include="berautoApp\" />
     <Folder Include="berautoApp\app\" />
+    <Folder Include="berautoApp\app\blueprints\user\" />
     <Folder Include="berautoApp\app\main\" />
     <Folder Include="berautoApp\app\models\" />
+    <Folder Include="berautoApp\app\blueprints\" />
     <Folder Include="berautoApp\app\templates\" />
   </ItemGroup>
   <ItemGroup>
@@ -45,6 +47,11 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="berautoApp\app\blueprints\user\routes.py" />
+    <Compile Include="berautoApp\app\blueprints\user\schemas.py" />
+    <Compile Include="berautoApp\app\blueprints\user\service.py" />
+    <Compile Include="berautoApp\app\blueprints\user\__init__.py" />
+    <Compile Include="berautoApp\app\blueprints\__init__.py" />
     <Compile Include="berautoApp\app\extensions.py">
       <SubType>Code</SubType>
     </Compile>
