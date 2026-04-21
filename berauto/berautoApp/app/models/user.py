@@ -1,13 +1,6 @@
+from app.models.role import Role
+from app.models.association import user_roles
 from app.extensions import db
-from sqlalchemy import Enum
-import enum
-
-
-class UserRole(enum.Enum):
-    USER = "USER"
-    STAFF = "STAFF"
-    ADMIN = "ADMIN"
-
 
 class User(db.Model):
     __tablename__ = "users"
@@ -21,7 +14,7 @@ class User(db.Model):
     address = db.Column(db.String(255))
     phone = db.Column(db.String(50))
 
-    role = db.Column(Enum(UserRole), nullable=False, default=UserRole.USER)
+    roles = db.relationship("Role", secondary=user_roles, backref="users")
     is_active = db.Column(db.Boolean, default=True)
 
     rentals = db.relationship("Rental", back_populates="user", cascade="all, delete")
