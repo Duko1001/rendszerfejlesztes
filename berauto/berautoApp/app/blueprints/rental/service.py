@@ -42,3 +42,10 @@ class RentalService:
     def get_all():
         rentals = db.session.execute(select(Rental)).scalars().all()
         return RentalResponseSchema(many=True).dump(rentals)
+
+    @staticmethod
+    def get_by_id(rental_id):
+        rental = db.session.get(Rental, rental_id)
+        if not rental:
+            return None
+        return RentalResponseSchema().dump(rental)
