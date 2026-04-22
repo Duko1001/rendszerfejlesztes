@@ -1,6 +1,7 @@
 from apiflask import APIFlask
 from config import Config
 from app.extensions import db
+from flask_migrate import Migrate
 
 
 def create_app(config_class=Config):
@@ -10,6 +11,8 @@ def create_app(config_class=Config):
 
     # Initialize Flask extensions here
     db.init_app(app)
+
+    migrate = Migrate(app, db, render_as_batch=True)
 
     from app import models
 

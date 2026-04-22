@@ -52,9 +52,9 @@ for c in Car.query.all():
     print(c.id, c.brand, c.model, c.license_plate)
 
 #Rental
-from app.models.rental import Rental, RentalStatus
+from app.models.rental import Rental
 
-rental1 = Rental(user=db.session.get(User, 2), car=db.session.get(Car, 1), start_time=datetime(2026, 3, 10, 10, 0), end_time=datetime(2026, 3, 10, 14, 0), status=RentalStatus.APPROVED)
+rental1 = Rental(user=db.session.get(User, 2), car=db.session.get(Car, 1), start_time=datetime(2026, 3, 10, 10, 0), end_time=datetime(2026, 3, 10, 14, 0), status="APPROVED")
 
 db.session.add(rental1)
 db.session.commit()
@@ -70,7 +70,7 @@ db.session.commit()
 #Test Rental+Invoice
 print("\nRental lista:")
 for r in Rental.query.all():
-    print(r.id, r.user.full_name, r.car.model, r.status.name)
+    print(r.id, r.user.full_name, r.car.model, r.status)
 
 print("\nInvoice lista:")
 for i in Invoice.query.all():
