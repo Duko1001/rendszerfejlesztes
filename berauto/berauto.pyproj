@@ -17,6 +17,7 @@
     <Name>berauto</Name>
     <RootNamespace>berauto</RootNamespace>
     <WebBrowserPort>8888</WebBrowserPort>
+    <TestFramework>Pytest</TestFramework>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -29,6 +30,7 @@
   <ItemGroup>
     <Folder Include="berautoApp\" />
     <Folder Include="berautoApp\app\" />
+    <Folder Include="berautoApp\app\blueprints\rental\" />
     <Folder Include="berautoApp\app\blueprints\user\" />
     <Folder Include="berautoApp\app\main\" />
     <Folder Include="berautoApp\app\models\" />
@@ -47,6 +49,18 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="berautoApp\app\blueprints\rental\routes.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="berautoApp\app\blueprints\rental\schemas.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="berautoApp\app\blueprints\rental\service.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="berautoApp\app\blueprints\rental\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="berautoApp\app\blueprints\user\routes.py" />
     <Compile Include="berautoApp\app\blueprints\user\schemas.py" />
     <Compile Include="berautoApp\app\blueprints\user\service.py" />
