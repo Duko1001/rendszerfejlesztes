@@ -29,3 +29,31 @@ class UserService:
             return False, "Invalid login"
 
         return True, UserResponseSchema().dump(user)
+
+    @staticmethod
+    def add_role_to_user(data):
+        try:
+            user = db.session.get(User, data["user_id"])
+            role = db.session.get(Role, data["role_id"])
+
+            if not user or not role:
+                return False, "User or Role not found"
+
+            user.roles.append(role)
+            db.session.commit()
+        except:
+            return False, "Role assign error"
+
+        return True, user
+
+    @staticmethod
+    def list_roles():
+        roles = db.session.query(Role).all()
+        return True, roles
+
+    @staticmethod
+    def get_user_roles(user_id):
+        user = db.session.get(User, user_id)
+        if not user:
+            return False, "User not found"
+        return True, user.roles

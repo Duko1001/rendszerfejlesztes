@@ -15,3 +15,11 @@ class UserResponseSchema(Schema):
 class UserLoginSchema(Schema):
     email = String(required=True, validate=Email())
     password = fields.String(required=True)
+
+class RoleSchema(Schema):
+    id = fields.Integer()
+    name = fields.String()
+
+class UserRoleAssignSchema(Schema):
+    user_id = fields.Integer()
+    role_id = fields.Integer()
