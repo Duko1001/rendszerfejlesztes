@@ -8,3 +8,6 @@ def index():
 
 from app.blueprints.user import bp as user_bp
 bp.register_blueprint(user_bp, url_prefix="/user")
+
+from app.blueprints.rental import bp as rental_bp
+bp.register_blueprint(rental_bp, url_prefix="/rental")

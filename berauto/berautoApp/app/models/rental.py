@@ -1,16 +1,5 @@
 from app.extensions import db
-from sqlalchemy import Enum
-import enum
 from datetime import datetime
-
-
-class RentalStatus(enum.Enum):
-    PENDING = "PENDING"
-    APPROVED = "APPROVED"
-    REJECTED = "REJECTED"
-    ACTIVE = "ACTIVE"
-    CLOSED = "CLOSED"
-
 
 class Rental(db.Model):
     __tablename__ = "rentals"
@@ -20,7 +9,9 @@ class Rental(db.Model):
     car_id = db.Column(db.Integer, db.ForeignKey("cars.id", ondelete="CASCADE"), nullable=False)
     start_time = db.Column(db.DateTime, nullable=False)
     end_time = db.Column(db.DateTime, nullable=False)
-    status = db.Column(Enum(RentalStatus), nullable=False, default=RentalStatus.PENDING)
+    
+    status = db.Column(db.String(20), nullable=False, default="PENDING")
+    
     created_at = db.Column(db.DateTime, default=datetime.now, nullable=False)
 
     user = db.relationship("User", back_populates="rentals")
