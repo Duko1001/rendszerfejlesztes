@@ -16,3 +16,9 @@ class RentalResponseSchema(Schema):
     end_date = fields.Date()
     status = fields.String()
     created_at = fields.DateTime()
+
+
+class CloseRentalResponseSchema(Schema):
+    message = fields.String()
+    rental_id = fields.Integer()
+    total_amount = fields.Float()

@@ -10,6 +10,3 @@ bp.register_blueprint(car_bp, url_prefix='/car')
 
 from app.blueprints.rental import bp as rental_bp
 bp.register_blueprint(rental_bp, url_prefix='/rental')
-
-from app.blueprints.invoice import bp as invoice_bp
-bp.register_blueprint(invoice_bp, url_prefix='/invoice')
