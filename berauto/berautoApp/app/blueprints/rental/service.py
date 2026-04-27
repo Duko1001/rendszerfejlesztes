@@ -5,6 +5,7 @@ from app.models.car import Car
 from app.models.invoice import Invoice
 from sqlalchemy import select
 from datetime import datetime
+from app.blueprints.rental.schemas import RentalResponseSchema
 
 class RentalService:
 
@@ -59,7 +60,7 @@ class RentalService:
             return False, "Not found"
         rental.status = "APPROVED"
         db.session.commit()
-        return True, rental
+        return True, RentalResponseSchema().dump(rental)
 
     @staticmethod
     def reject(rid):
@@ -69,7 +70,7 @@ class RentalService:
         rental.status = "REJECTED"
         rental.car.is_available = True
         db.session.commit()
-        return True, rental
+        return True, RentalResponseSchema().dump(rental)
 
     @staticmethod
     def start(rid):
@@ -79,7 +80,7 @@ class RentalService:
         rental.status = "ACTIVE"
         rental.start_time = datetime.utcnow()
         db.session.commit()
-        return True, rental
+        return True, RentalResponseSchema().dump(rental)
 
     @staticmethod
     def close(rid):
