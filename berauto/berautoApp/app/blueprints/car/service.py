@@ -6,7 +6,7 @@ class CarService:
 
     @staticmethod
     def get_all():
-        cars = db.session.execute(select(Car)).scalars()
+        cars = db.session.execute(select(Car)).scalars().all()
         return True, cars
 
     @staticmethod
@@ -19,11 +19,20 @@ class CarService:
     @staticmethod
     def add(data):
         try:
-            car = Car(**data)
+            car = Car(
+                brand=data["brand"],
+                model=data["model"],
+                year=data["year"],
+                license_plate=data["license_plate"],
+                daily_price=data["daily_price"],
+                mileage=data.get("mileage", 0)
+            )
             db.session.add(car)
             db.session.commit()
-        except:
-            return False, "Car add error"
+        except Exception as e:
+            db.session.rollback()
+            return False, str(e)
+
         return True, car
 
     @staticmethod
@@ -36,10 +45,13 @@ class CarService:
             car.brand = data.get("brand", car.brand)
             car.model = data.get("model", car.model)
             car.daily_price = data.get("daily_price", car.daily_price)
+            car.year = data.get("year", car.year)
+            car.license_plate = data.get("license_plate", car.license_plate)
+            car.mileage = data.get("mileage", car.mileage)
 
             db.session.commit()
-        except:
-            return False, "Car update error"
+        except Exception as e:
+            return False, str(e)
 
         return True, car
 
@@ -52,7 +64,7 @@ class CarService:
 
             db.session.delete(car)
             db.session.commit()
-        except:
-            return False, "Car delete error"
+        except Exception as e:
+            return False, str(e)
 
         return True, "Deleted"

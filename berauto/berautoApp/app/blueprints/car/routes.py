@@ -22,8 +22,8 @@ def get_car(cid):
 @bp.post('/add')
 @bp.input(CarRequestSchema)
 @bp.output(CarResponseSchema)
-def add_car(data):
-    success, res = CarService.add(data)
+def add_car(json_data):
+    success, res = CarService.add(json_data)
     if success: return res
     raise HTTPError(400, message=res)
 
@@ -31,10 +31,8 @@ def add_car(data):
 @bp.put('/update/<int:cid>')
 @bp.input(CarRequestSchema)
 @bp.output(CarResponseSchema)
-def update_car(cid, data):
-    success, res = CarService.update(cid, data)
-    if success: return res
-    raise HTTPError(400, message=res)
+def update_car(cid, json_data):
+    success, res = CarService.update(cid, json_data)
 
 
 @bp.delete('/delete/<int:cid>')
