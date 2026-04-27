@@ -31,6 +31,7 @@
     <Folder Include="berautoApp\" />
     <Folder Include="berautoApp\app\" />
     <Folder Include="berautoApp\app\blueprints\car\" />
+    <Folder Include="berautoApp\app\blueprints\invoice\" />
     <Folder Include="berautoApp\app\blueprints\rental\" />
     <Folder Include="berautoApp\app\blueprints\user\" />
     <Folder Include="berautoApp\app\main\" />
@@ -62,6 +63,10 @@
     <Compile Include="berautoApp\app\blueprints\car\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="berautoApp\app\blueprints\invoice\routes.py" />
+    <Compile Include="berautoApp\app\blueprints\invoice\schemas.py" />
+    <Compile Include="berautoApp\app\blueprints\invoice\service.py" />
+    <Compile Include="berautoApp\app\blueprints\invoice\__init__.py" />
     <Compile Include="berautoApp\app\blueprints\rental\routes.py">
       <SubType>Code</SubType>
     </Compile>
