@@ -10,19 +10,26 @@ class RentalService:
 
     @staticmethod
     def create_rental(data):
+
         user = db.session.get(User, data["user_id"])
         if not user:
             return False, "User not found"
 
-        car = db.session.get(Car, data["car_id"])
+        car = db.session.get(Car, data["car_id"])   
         if not car:
             return False, "Car not found"
 
-        if not car.is_available:
-            return False, "Car not available"
-
         if data["end_time"] < data["start_time"]:
             return False, "Invalid date range"
+
+        existing = db.session.query(Rental).filter(
+            Rental.car_id == car.id,
+            Rental.start_time < data["end_time"],
+            Rental.end_time > data["start_time"]
+        ).first()
+
+        if existing:
+            return False, "Car already booked for this period"
 
         rental = Rental(
             user_id=data["user_id"],
@@ -32,7 +39,6 @@ class RentalService:
             status="PENDING"
         )
 
-        car.is_available = False
         db.session.add(rental)
         db.session.commit()
 
