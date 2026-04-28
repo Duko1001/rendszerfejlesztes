@@ -42,8 +42,8 @@ def user_roles(uid):
 @bp.post('/roles/add')
 @bp.input(UserRoleAssignSchema)
 @bp.output(RoleSchema(many=True))
-def add_role(data):
-    success, res = UserService.add_role_to_user(data)
+def add_role(json_data):
+    success, res = UserService.add_role_to_user(json_data)
     if success:
         return res.roles
     raise HTTPError(400, message=res)

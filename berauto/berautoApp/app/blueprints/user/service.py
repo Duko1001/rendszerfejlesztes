@@ -31,10 +31,10 @@ class UserService:
         return True, UserResponseSchema().dump(user)
 
     @staticmethod
-    def add_role_to_user(data):
+    def add_role_to_user(json_data):
         try:
-            user = db.session.get(User, data["user_id"])
-            role = db.session.get(Role, data["role_id"])
+            user = db.session.get(User, json_data["user_id"])
+            role = db.session.get(Role, json_data["role_id"])
 
             if not user or not role:
                 return False, "User or Role not found"
