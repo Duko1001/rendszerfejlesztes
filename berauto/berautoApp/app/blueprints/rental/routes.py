@@ -47,3 +47,10 @@ def close(rid):
     success, res = RentalService.close(rid)
     if success: return res
     raise HTTPError(400, message=res)
+
+@bp.get("/<int:rid>/invoice")
+def get_invoice(rid):
+    success, response = RentalService.get_invoice(rid)
+    if success:
+        return response
+    raise HTTPError(404, message=response)

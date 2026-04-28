@@ -6,6 +6,7 @@ from app.models.invoice import Invoice
 from sqlalchemy import select
 from datetime import datetime
 from app.blueprints.rental.schemas import RentalResponseSchema
+import math
 
 class RentalService:
 
@@ -92,7 +93,7 @@ class RentalService:
         rental.car.is_available = True
 
         delta = rental.end_time - rental.start_time
-        days = max(delta.days, 1)
+        days = math.ceil(delta.total_seconds() / 86400)
         total = days * rental.car.daily_price
 
         invoice = Invoice(
@@ -106,3 +107,19 @@ class RentalService:
         db.session.commit()
 
         return True, {"message": "Closed", "total": total}
+
+    @staticmethod
+    def get_invoice(rid):
+        rental = db.session.get(Rental, rid)
+
+        if not rental or not rental.invoice:
+            return False, "Invoice not found"
+
+        invoice = rental.invoice
+
+        return True, {
+            "id": invoice.id,
+            "amount": invoice.amount,
+            "issued_at": invoice.issued_at.isoformat(),
+            "paid": invoice.paid
+        }
