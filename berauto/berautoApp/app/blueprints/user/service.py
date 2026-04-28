@@ -72,4 +72,9 @@ class UserService:
             db.session.rollback()
             return False, str(e)
 
+    @staticmethod
+    def get_all_users():
+        users = db.session.execute(select(User)).scalars().all()
+        return True, users
+
         return True, "User deleted"

@@ -54,3 +54,11 @@ def delete_user(uid):
     if success:
         return {"message": res}
     raise HTTPError(400, message=res)
+
+@bp.get('/list')
+@bp.output(UserResponseSchema(many=True))
+def list_users():
+    success, res = UserService.get_all_users()
+    if success:
+        return res
+    raise HTTPError(400, message=res)

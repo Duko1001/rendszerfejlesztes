@@ -7,19 +7,21 @@ class UserRequestSchema(Schema):
     email = String(required=True, validate=Email())
     password = fields.String(required=True)
 
+class RoleSchema(Schema):
+    id = fields.Integer()
+    name = fields.String()
+
 class UserResponseSchema(Schema):
     id = fields.Integer()
     full_name = fields.String()
     email = fields.String()
+    roles = fields.List(fields.Nested(RoleSchema))
 
 class UserLoginSchema(Schema):
     email = String(required=True, validate=Email())
     password = fields.String(required=True)
 
-class RoleSchema(Schema):
-    id = fields.Integer()
-    name = fields.String()
-
 class UserRoleAssignSchema(Schema):
     user_id = fields.Integer()
     role_id = fields.Integer()
+
