@@ -57,3 +57,19 @@ class UserService:
         if not user:
             return False, "User not found"
         return True, user.roles
+
+    @staticmethod
+    def delete(user_id):
+        try:
+            user = db.session.get(User, user_id)
+            if not user:
+                return False, "User not found"
+
+            db.session.delete(user)
+            db.session.commit()
+
+        except Exception as e:
+            db.session.rollback()
+            return False, str(e)
+
+        return True, "User deleted"

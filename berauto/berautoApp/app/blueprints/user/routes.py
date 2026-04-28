@@ -47,3 +47,10 @@ def add_role(data):
     if success:
         return res.roles
     raise HTTPError(400, message=res)
+
+@bp.delete('/delete/<int:uid>')
+def delete_user(uid):
+    success, res = UserService.delete(uid)
+    if success:
+        return {"message": res}
+    raise HTTPError(400, message=res)
