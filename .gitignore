@@ -362,3 +362,29 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 >>>>>>> master
+
+
+# --- CUSTOM (project specific) ---
+
+# JWT / secret keys
+app/.ssh/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environment
+venv/
+.env/
+
+# Environment variables
+.env
+
+# Database
+*.db
+*.sqlite3
+app.db
+
+# IDE (opcionális)
+.vscode/
