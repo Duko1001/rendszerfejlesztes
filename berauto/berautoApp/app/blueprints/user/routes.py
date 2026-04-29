@@ -3,6 +3,8 @@ from app.blueprints.user.schemas import UserRequestSchema, UserResponseSchema, U
 from app.blueprints.user.service import UserService
 from app.blueprints.user.schemas import RoleSchema, UserRoleAssignSchema
 from apiflask import HTTPError
+from app.extensions import auth
+from app.blueprints import role_required
 
 @bp.post("/register")
 @bp.input(UserRequestSchema, location="json")
@@ -25,16 +27,20 @@ def login(json_data):
 
 @bp.get('/roles')
 @bp.output(RoleSchema(many=True))
+@bp.auth_required(auth)
+@role_required(["ADMIN"])
 def list_roles():
     success, res = UserService.list_roles()
     if success: return res
     raise HTTPError(400, message=res)
 
 
-@bp.get('/roles/<int:uid>')
+@bp.get('/myroles')
 @bp.output(RoleSchema(many=True))
-def user_roles(uid):
-    success, res = UserService.get_user_roles(uid)
+@bp.auth_required(auth)
+def my_roles():
+    user_id = auth.current_user.get("user_id")
+    success, res = UserService.get_user_roles(user_id)
     if success: return res
     raise HTTPError(400, message=res)
 
@@ -42,6 +48,8 @@ def user_roles(uid):
 @bp.post('/roles/add')
 @bp.input(UserRoleAssignSchema)
 @bp.output(RoleSchema(many=True))
+@bp.auth_required(auth)
+@role_required(["ADMIN"])
 def add_role(json_data):
     success, res = UserService.add_role_to_user(json_data)
     if success:
@@ -49,6 +57,8 @@ def add_role(json_data):
     raise HTTPError(400, message=res)
 
 @bp.delete('/delete/<int:uid>')
+@bp.auth_required(auth)
+@role_required(["ADMIN"])
 def delete_user(uid):
     success, res = UserService.delete(uid)
     if success:
@@ -57,6 +67,8 @@ def delete_user(uid):
 
 @bp.get('/list')
 @bp.output(UserResponseSchema(many=True))
+@bp.auth_required(auth)
+@role_required(["ADMIN"])
 def list_users():
     success, res = UserService.get_all_users()
     if success:

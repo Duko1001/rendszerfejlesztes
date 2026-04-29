@@ -7,14 +7,20 @@ from apiflask import HTTPError
 
 bp = APIBlueprint('main', __name__, tag="main")
 
-from app.blueprints.user import bp as user_bp
-bp.register_blueprint(user_bp, url_prefix='/user')
+from functools import wraps
+def role_required(roles):
+    def wrapper(fn):
+        @wraps(fn)   
+        def decorated(*args, **kwargs):
+            user_roles = [r["name"] for r in auth.current_user.get("roles")]
 
-from app.blueprints.car import bp as car_bp
-bp.register_blueprint(car_bp, url_prefix='/car')
+            for role in roles:
+                if role in user_roles:
+                    return fn(*args, **kwargs)
 
-from app.blueprints.rental import bp as rental_bp
-bp.register_blueprint(rental_bp, url_prefix='/rental')
+            raise HTTPError(403, message="Access denied")
+        return decorated
+    return wrapper
 
 @auth.verify_token
 def verify_token(token):
@@ -31,16 +37,14 @@ def verify_token(token):
     except:
         return None
 
+from app.blueprints.user import bp as user_bp
+from app.blueprints.car import bp as car_bp
+from app.blueprints.rental import bp as rental_bp
 
-def role_required(roles):
-    def wrapper(fn):
-        def decorated(*args, **kwargs):
-            user_roles = [r["name"] for r in auth.current_user.get("roles")]
+from apiflask import APIBlueprint
 
-            for role in roles:
-                if role in user_roles:
-                    return fn(*args, **kwargs)
+bp = APIBlueprint('main', __name__)
 
-            raise HTTPError(403, message="Access denied")
-        return decorated
-    return wrapper
+bp.register_blueprint(user_bp, url_prefix="/user")
+bp.register_blueprint(car_bp, url_prefix="/car")
+bp.register_blueprint(rental_bp, url_prefix="/rental")

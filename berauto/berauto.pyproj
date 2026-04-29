@@ -38,11 +38,13 @@
     <Folder Include="berautoApp\app\models\" />
     <Folder Include="berautoApp\app\blueprints\" />
     <Folder Include="berautoApp\app\templates\" />
+    <Folder Include="berautoApp\.ssh\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="berautoApp\.flaskenv">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="berautoApp\.ssh\private-key.pem" />
     <Content Include="berautoApp\app\templates\index.html">
       <SubType>Code</SubType>
     </Content>
