@@ -16,6 +16,7 @@ class UserResponseSchema(Schema):
     full_name = fields.String()
     email = fields.String()
     roles = fields.List(fields.Nested(RoleSchema))
+    token = fields.String()
 
 class UserLoginSchema(Schema):
     email = String(required=True, validate=Email())
@@ -25,3 +26,7 @@ class UserRoleAssignSchema(Schema):
     user_id = fields.Integer()
     role_id = fields.Integer()
 
+class PayloadSchema(Schema):
+    user_id = fields.Integer()
+    roles = fields.List(fields.Nested(RoleSchema))
+    exp = fields.Integer()
