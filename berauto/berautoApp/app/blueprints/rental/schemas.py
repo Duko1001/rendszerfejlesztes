@@ -1,7 +1,6 @@
 from marshmallow import Schema, fields
 
 class RentalCreateSchema(Schema):
-    user_id = fields.Integer(required=True)
     car_id = fields.Integer(required=True)
     start_time = fields.DateTime(required=True)
     end_time = fields.DateTime(required=True)

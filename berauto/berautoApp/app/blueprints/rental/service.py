@@ -11,13 +11,12 @@ import math
 class RentalService:
 
     @staticmethod
-    def create_rental(data):
-
-        user = db.session.get(User, data["user_id"])
+    def create_rental(user_id, data):
+        user = db.session.get(User, user_id)
         if not user:
             return False, "User not found"
 
-        car = db.session.get(Car, data["car_id"])   
+        car = db.session.get(Car, data["car_id"])
         if not car:
             return False, "Car not found"
 
@@ -31,11 +30,11 @@ class RentalService:
         ).first()
 
         if existing:
-            return False, "Car already booked for this period"
+            return False, "Car already booked"
 
         rental = Rental(
-            user_id=data["user_id"],
-            car_id=data["car_id"],
+            user_id=user_id,
+            car_id=car.id,
             start_time=data["start_time"],
             end_time=data["end_time"],
             status="PENDING"
@@ -48,11 +47,24 @@ class RentalService:
 
     @staticmethod
     def get_all():
-        return db.session.execute(select(Rental)).scalars().all()
+        rentals = db.session.execute(select(Rental)).scalars().all()
+        return True, rentals
 
     @staticmethod
-    def get_by_id(rid):
-        return db.session.get(Rental, rid)
+    def get_by_id(rid, user):
+        rental = db.session.get(Rental, rid)
+        if not rental:
+            return False, "Not found"
+
+        user_roles = [r["name"] for r in user.get("roles", [])]
+
+        if "ADMIN" in user_roles or "STAFF" in user_roles:
+            return True, rental
+
+        if rental.user_id != user.get("user_id"):
+            return False, "Forbidden"
+
+        return True, rental
 
     @staticmethod
     def approve(rid):
@@ -69,7 +81,6 @@ class RentalService:
         if not rental:
             return False, "Not found"
         rental.status = "REJECTED"
-        rental.car.is_available = True
         db.session.commit()
         return True, RentalResponseSchema().dump(rental)
 
@@ -90,7 +101,6 @@ class RentalService:
             return False, "Not found"
 
         rental.status = "CLOSED"
-        rental.car.is_available = True
 
         delta = rental.end_time - rental.start_time
         days = math.ceil(delta.total_seconds() / 86400)
@@ -108,18 +118,24 @@ class RentalService:
 
         return True, {"message": "Closed", "total": total}
 
-    @staticmethod
-    def get_invoice(rid):
-        rental = db.session.get(Rental, rid)
+    # @staticmethod
+    # def get_invoice(rid, user):
+    #     rental = db.session.get(Rental, rid)
 
-        if not rental or not rental.invoice:
-            return False, "Invoice not found"
+    #     if not rental or not rental.invoice:
+    #         return False, "Invoice not found"
 
-        invoice = rental.invoice
+    #     user_roles = [r["name"] for r in user.get("roles", [])]
 
-        return True, {
-            "id": invoice.id,
-            "amount": invoice.amount,
-            "issued_at": invoice.issued_at.isoformat(),
-            "paid": invoice.paid
-        }
+    #     if "ADMIN" not in user_roles and "STAFF" not in user_roles:
+    #         if rental.user_id != user.get("user_id"):
+    #             return False, "Forbidden"
+
+    #     invoice = rental.invoice
+
+    #     return True, {
+    #         "id": invoice.id,
+    #         "amount": invoice.amount,
+    #         "issued_at": invoice.issued_at.isoformat(),
+    #         "paid": invoice.paid
+    #     }

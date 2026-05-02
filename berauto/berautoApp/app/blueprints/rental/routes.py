@@ -12,57 +12,74 @@ from app.blueprints import role_required
 @bp.auth_required(auth)
 @role_required(["USER"])
 def create_rental(json_data):
-    success, res = RentalService.create_rental(json_data)
-    if success: return res
+    user_id = auth.current_user.get("user_id")
+    success, res = RentalService.create_rental(user_id, json_data)
+    if success:
+        return res
     raise HTTPError(400, message=res)
 
 @bp.get("/")
 @bp.output(RentalResponseSchema(many=True))
+@bp.auth_required(auth)
+@role_required(["ADMIN", "STAFF"])
 def get_rentals():
-    return RentalService.get_all()
+    success, res = RentalService.get_all()
+    if success:
+        return res
+    raise HTTPError(400, message=res)
 
 @bp.get("/<int:rid>")
 @bp.output(RentalResponseSchema)
+@bp.auth_required(auth)
 def get_rental(rid):
-    res = RentalService.get_by_id(rid)
-    if not res:
-        raise HTTPError(404, message="Rental not found")
-    return res
+    user = auth.current_user
+    success, res = RentalService.get_by_id(rid, user)
+    if success:
+        return res
+    raise HTTPError(404, message=res)
 
 @bp.patch("/<int:rid>/approve")
 @bp.auth_required(auth)
-@role_required(["ADMIN"])
+@role_required(["ADMIN", "STAFF"])
 def approve(rid):
     success, res = RentalService.approve(rid)
-    if success: return res
+    if success:
+        return res
     raise HTTPError(400, message=res)
 
 @bp.patch("/<int:rid>/reject")
+@bp.auth_required(auth)
+@role_required(["ADMIN", "STAFF"])
 def reject(rid):
     success, res = RentalService.reject(rid)
-    if success: return res
+    if success:
+        return res
     raise HTTPError(400, message=res)
 
 @bp.patch("/<int:rid>/start")
 @bp.auth_required(auth)
-@role_required(["USER", "ADMIN"])
+@role_required(["ADMIN", "STAFF"])
 def start(rid):
     success, res = RentalService.start(rid)
-    if success: return res
+    if success:
+        return res
     raise HTTPError(400, message=res)
 
 @bp.patch("/<int:rid>/close")
 @bp.auth_required(auth)
-@role_required(["USER", "ADMIN"])
+@role_required(["ADMIN", "STAFF"])
 def close(rid):
     success, res = RentalService.close(rid)
-    if success: return res
+    if success:
+        return res
     raise HTTPError(400, message=res)
 
-@bp.get("/<int:rid>/invoice")
-def get_invoice(rid):
-    success, response = RentalService.get_invoice(rid)
-    if success:
-        return response
-    raise HTTPError(404, message=response)
+# @bp.get("/<int:rid>/invoice")
+# @bp.auth_required(auth)
+# def get_invoice(rid):
+#     user = auth.current_user
+#     success, response = RentalService.get_invoice(rid, user)
+#     if success:
+#         return response
+#     raise HTTPError(404, message=response)
 

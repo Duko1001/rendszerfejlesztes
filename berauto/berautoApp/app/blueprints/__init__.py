@@ -4,6 +4,7 @@ from flask import current_app
 from authlib.jose import jwt
 from datetime import datetime
 from apiflask import HTTPError
+from app.blueprints.invoice import bp as invoice_bp
 
 bp = APIBlueprint('main', __name__, tag="main")
 
@@ -44,3 +45,4 @@ from app.blueprints.rental import bp as rental_bp
 bp.register_blueprint(user_bp, url_prefix="/user")
 bp.register_blueprint(car_bp, url_prefix="/car")
 bp.register_blueprint(rental_bp, url_prefix="/rental")
+bp.register_blueprint(invoice_bp, url_prefix="/invoice")
