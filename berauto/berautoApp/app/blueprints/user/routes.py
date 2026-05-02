@@ -26,18 +26,19 @@ def login(json_data):
     raise HTTPError(400, message=response)
 
 @bp.get('/roles')
-@bp.output(RoleSchema(many=True))
 @bp.auth_required(auth)
 @role_required(["ADMIN"])
 def list_roles():
     success, res = UserService.list_roles()
-    if success: return res
+    if success:
+        return res
     raise HTTPError(400, message=res)
 
 
 @bp.get('/myroles')
 @bp.output(RoleSchema(many=True))
 @bp.auth_required(auth)
+@role_required(["ADMIN", "USER", "STAFF"])
 def my_roles():
     user_id = auth.current_user.get("user_id")
     success, res = UserService.get_user_roles(user_id)
@@ -54,6 +55,16 @@ def add_role(json_data):
     success, res = UserService.add_role_to_user(json_data)
     if success:
         return res.roles
+    raise HTTPError(400, message=res)
+
+@bp.delete('/roles/remove')
+@bp.auth_required(auth)
+@role_required(["ADMIN"])
+@bp.input(UserRoleAssignSchema)
+def remove_role(json_data):
+    success, res = UserService.remove_role_from_user(json_data)
+    if success:
+        return {"message": res}
     raise HTTPError(400, message=res)
 
 @bp.delete('/delete/<int:uid>')

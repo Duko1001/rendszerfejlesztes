@@ -12,7 +12,7 @@ def role_required(roles):
     def wrapper(fn):
         @wraps(fn)   
         def decorated(*args, **kwargs):
-            user_roles = [r["name"] for r in auth.current_user.get("roles")]
+            user_roles = [r["name"] for r in auth.current_user.get("roles", [])]
 
             for role in roles:
                 if role in user_roles:
@@ -40,10 +40,6 @@ def verify_token(token):
 from app.blueprints.user import bp as user_bp
 from app.blueprints.car import bp as car_bp
 from app.blueprints.rental import bp as rental_bp
-
-from apiflask import APIBlueprint
-
-bp = APIBlueprint('main', __name__)
 
 bp.register_blueprint(user_bp, url_prefix="/user")
 bp.register_blueprint(car_bp, url_prefix="/car")

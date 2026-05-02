@@ -25,7 +25,7 @@ def get_car(cid):
 @bp.input(CarRequestSchema)
 @bp.output(CarResponseSchema)
 @bp.auth_required(auth)
-@role_required(["ADMIN"])
+@role_required(["ADMIN", "STAFF"])
 def add_car(json_data):
     success, res = CarService.add(json_data)
     if success: return res
@@ -35,13 +35,18 @@ def add_car(json_data):
 @bp.put('/update/<int:cid>')
 @bp.input(CarRequestSchema)
 @bp.output(CarResponseSchema)
+@bp.auth_required(auth)
+@role_required(["ADMIN", "STAFF"])
 def update_car(cid, json_data):
     success, res = CarService.update(cid, json_data)
+    if success:
+        return res
+    raise HTTPError(400, message=res)
 
 
 @bp.delete('/delete/<int:cid>')
 @bp.auth_required(auth)
-@role_required(["ADMIN"])
+@role_required(["ADMIN", "STAFF"])
 def delete_car(cid):
     success, res = CarService.delete(cid)
     if success: return {"message": res}

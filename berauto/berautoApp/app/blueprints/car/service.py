@@ -51,6 +51,7 @@ class CarService:
 
             db.session.commit()
         except Exception as e:
+            db.session.rollback()
             return False, str(e)
 
         return True, car

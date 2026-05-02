@@ -25,14 +25,7 @@ class UserService:
 
         return True, UserResponseSchema().dump(user)
 
-    @staticmethod
-    def login(data):
-        user = db.session.execute(select(User).filter_by(email=data["email"])).scalar_one_or_none()
-
-        if not user or user.password_hash != data["password"]:
-            return False, "Invalid login"
-
-        return True, UserResponseSchema().dump(user)
+    
 
     @staticmethod
     def add_role_to_user(json_data):
@@ -52,8 +45,17 @@ class UserService:
 
     @staticmethod
     def list_roles():
-        roles = db.session.query(Role).all()
-        return True, roles
+        users = db.session.execute(select(User)).scalars().all()
+
+        result = []
+        for user in users:
+            result.append({
+                "user_id": user.id,
+                "email": user.email,
+                "roles": [role.name for role in user.roles]
+            })
+
+        return True, result
 
     @staticmethod
     def get_user_roles(user_id):
@@ -71,6 +73,7 @@ class UserService:
 
             db.session.delete(user)
             db.session.commit()
+            return True, "User deleted"
 
         except Exception as e:
             db.session.rollback()
@@ -80,8 +83,6 @@ class UserService:
     def get_all_users():
         users = db.session.execute(select(User)).scalars().all()
         return True, users
-
-        return True, "User deleted"
 
     @staticmethod
     def token_generate(user):
@@ -111,3 +112,27 @@ class UserService:
         user_data["token"] = UserService.token_generate(user)
 
         return True, user_data
+
+    @staticmethod
+    def remove_role_from_user(json_data):
+        try:
+            user = db.session.get(User, json_data["user_id"])
+            role = db.session.get(Role, json_data["role_id"])
+
+            if not user or not role:
+                return False, "User or Role not found"
+
+            if role not in user.roles:
+                return False, "User does not have this role"
+
+            if role.name == "ADMIN" and len(user.roles) == 1:
+                return False, "Cannot remove last role"
+
+            user.roles.remove(role)
+            db.session.commit()
+
+        except Exception as e:
+            db.session.rollback()
+            return False, str(e)
+
+        return True, "Role removed from user"
