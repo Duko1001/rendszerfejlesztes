@@ -117,25 +117,34 @@ class RentalService:
         db.session.commit()
 
         return True, {"message": "Closed", "total": total}
+        
+    @staticmethod
+    def get_booked_dates(car_id):
+        rentals = db.session.query(Rental).filter(
+            Rental.car_id == car_id,
+            Rental.status.in_(["PENDING", "APPROVED", "ACTIVE"])
+        ).all()
 
-    # @staticmethod
-    # def get_invoice(rid, user):
-    #     rental = db.session.get(Rental, rid)
+        result = []
+        for r in rentals:
+            result.append({
+                "start_time": r.start_time,
+                "end_time": r.end_time
+            })
 
-    #     if not rental or not rental.invoice:
-    #         return False, "Invoice not found"
+            return True, result
 
-    #     user_roles = [r["name"] for r in user.get("roles", [])]
 
-    #     if "ADMIN" not in user_roles and "STAFF" not in user_roles:
-    #         if rental.user_id != user.get("user_id"):
-    #             return False, "Forbidden"
+    @staticmethod
+    def get_my_rentals(user):
+        user_id = user.get("user_id")
 
-    #     invoice = rental.invoice
+        rentals = db.session.query(Rental).filter(
+            Rental.user_id == user_id
+        ).all()
 
-    #     return True, {
-    #         "id": invoice.id,
-    #         "amount": invoice.amount,
-    #         "issued_at": invoice.issued_at.isoformat(),
-    #         "paid": invoice.paid
-    #     }
+        return True, rentals
+
+
+
+    

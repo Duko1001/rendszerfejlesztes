@@ -74,12 +74,20 @@ def close(rid):
         return res
     raise HTTPError(400, message=res)
 
-# @bp.get("/<int:rid>/invoice")
-# @bp.auth_required(auth)
-# def get_invoice(rid):
-#     user = auth.current_user
-#     success, response = RentalService.get_invoice(rid, user)
-#     if success:
-#         return response
-#     raise HTTPError(404, message=response)
+@bp.get("/car/<int:cid>/booked")
+def get_booked_dates(cid):
+    success, res = RentalService.get_booked_dates(cid)
+    if success:
+        return res
+    raise HTTPError(400, message=res)
+
+@bp.get("/my")
+@bp.output(RentalResponseSchema(many=True))
+@bp.auth_required(auth)
+def get_my_rentals():
+    user = auth.current_user
+    success, res = RentalService.get_my_rentals(user)
+    if success:
+        return res
+    raise HTTPError(400, message=res)
 

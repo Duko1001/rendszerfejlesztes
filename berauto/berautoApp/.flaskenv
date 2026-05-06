@@ -1,4 +1,4 @@
 FLASK_RUN_HOST = "localhost"
-FLASK_RUN_PORT = "8888"
+FLASK_RUN_PORT = "5555"
 FLASK_ENV=development
 FLASK_APP=app:create_app
